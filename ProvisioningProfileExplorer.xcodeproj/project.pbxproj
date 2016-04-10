@@ -11,6 +11,8 @@
 		D7BD95401CB9F04E00FFA177 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7BD953F1CB9F04E00FFA177 /* ViewController.swift */; };
 		D7BD95421CB9F04E00FFA177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7BD95411CB9F04E00FFA177 /* Assets.xcassets */; };
 		D7BD95451CB9F04E00FFA177 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7BD95431CB9F04E00FFA177 /* Main.storyboard */; };
+		D7BD95681CB9F6D100FFA177 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7BD95671CB9F6D100FFA177 /* WebKit.framework */; };
+		D7CE24DC1CBA2C980017CE12 /* ProvisioningProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CE24DB1CBA2C980017CE12 /* ProvisioningProfile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,8 @@
 		D7BD95411CB9F04E00FFA177 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7BD95441CB9F04E00FFA177 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D7BD95461CB9F04E00FFA177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D7BD95671CB9F6D100FFA177 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		D7CE24DB1CBA2C980017CE12 /* ProvisioningProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningProfile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7BD95681CB9F6D100FFA177 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -36,6 +41,7 @@
 		D7BD95311CB9F04E00FFA177 = {
 			isa = PBXGroup;
 			children = (
+				D7BD95671CB9F6D100FFA177 /* WebKit.framework */,
 				D7BD953C1CB9F04E00FFA177 /* ProvisioningProfileExplorer */,
 				D7BD953B1CB9F04E00FFA177 /* Products */,
 			);
@@ -52,13 +58,22 @@
 		D7BD953C1CB9F04E00FFA177 /* ProvisioningProfileExplorer */ = {
 			isa = PBXGroup;
 			children = (
+				D7BD956D1CB9F8BD00FFA177 /* Model */,
 				D7BD953D1CB9F04E00FFA177 /* AppDelegate.swift */,
 				D7BD953F1CB9F04E00FFA177 /* ViewController.swift */,
+				D7BD95461CB9F04E00FFA177 /* Info.plist */,
 				D7BD95411CB9F04E00FFA177 /* Assets.xcassets */,
 				D7BD95431CB9F04E00FFA177 /* Main.storyboard */,
-				D7BD95461CB9F04E00FFA177 /* Info.plist */,
 			);
 			path = ProvisioningProfileExplorer;
+			sourceTree = "<group>";
+		};
+		D7BD956D1CB9F8BD00FFA177 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D7CE24DB1CBA2C980017CE12 /* ProvisioningProfile.swift */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,6 +146,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7CE24DC1CBA2C980017CE12 /* ProvisioningProfile.swift in Sources */,
 				D7BD95401CB9F04E00FFA177 /* ViewController.swift in Sources */,
 				D7BD953E1CB9F04E00FFA177 /* AppDelegate.swift in Sources */,
 			);
@@ -275,6 +291,7 @@
 				D7BD954B1CB9F04E00FFA177 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
