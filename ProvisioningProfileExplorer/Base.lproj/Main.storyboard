@@ -688,7 +688,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" headerView="IC7-ue-RJW" id="Kdy-xv-7sm">
-                                                            <rect key="frame" x="0.0" y="0.0" width="1135" height="300"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="982" height="300"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -722,7 +722,7 @@
                                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="name"/>
                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 </tableColumn>
-                                                                <tableColumn identifier="expirationDate" editable="NO" width="150" minWidth="120" maxWidth="1000" id="Sio-gN-eRU">
+                                                                <tableColumn identifier="expirationDate" editable="NO" width="150" minWidth="150" maxWidth="1000" id="Sio-gN-eRU">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="有効期限">
                                                                         <font key="font" metaFont="smallSystem"/>
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -734,19 +734,6 @@
                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                     <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="expirationDate"/>
-                                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                                </tableColumn>
-                                                                <tableColumn identifier="createDate" editable="NO" width="150" minWidth="120" maxWidth="3.4028234663852886e+38" id="xf2-Zt-75w">
-                                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="作成年月日">
-                                                                        <font key="font" metaFont="smallSystem"/>
-                                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                    </tableHeaderCell>
-                                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="Lhh-Oq-gBv">
-                                                                        <font key="font" size="11" name="Monaco"/>
-                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 </tableColumn>
                                                                 <tableColumn identifier="uuid" editable="NO" width="300" minWidth="300" maxWidth="3.4028234663852886e+38" id="M6h-13-sCb">
@@ -781,7 +768,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <tableHeaderView key="headerView" id="IC7-ue-RJW">
-                                                    <rect key="frame" x="0.0" y="0.0" width="1135" height="23"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="982" height="23"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableHeaderView>
                                             </scrollView>

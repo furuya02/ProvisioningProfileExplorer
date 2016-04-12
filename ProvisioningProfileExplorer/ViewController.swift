@@ -48,7 +48,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         case "name":
             return profiles[row].name
         case "expirationDate":
-            return profiles[row].expirationDate
+            return LocalDate(profiles[row].expirationDate,lastDays: profiles[row].lastDays)
         case "createDate":
             return profiles[row].creationDate
         case "uuid":
@@ -65,7 +65,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     func tableView(tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
 
         for sortDescriptor in tableView.sortDescriptors {
-            var key = sortDescriptor.key as String!
+            let key = sortDescriptor.key as String!
             switch key {
             case "name":
                 if sortDescriptor.ascending {
@@ -86,6 +86,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
                 } else {
                     profiles.sortInPlace { (a,b) in return a.uuid > b.uuid }
                 }
+            case "expirationDate":
+                if sortDescriptor.ascending {
+                    profiles.sortInPlace { (a,b) in return a.expirationDate.timeIntervalSince1970 < b.expirationDate.timeIntervalSince1970 }
+                } else {
+                    profiles.sortInPlace { (a,b) in return a.expirationDate.timeIntervalSince1970 > b.expirationDate.timeIntervalSince1970 }
+                }
             default:
                 if sortDescriptor.ascending {
                     profiles.sortInPlace { (a,b) in return a.uuid < b.uuid }
@@ -98,12 +104,19 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         tableView.reloadData()
     }
 
-    
-
-
-
-
-
+    // ローカルタイムでのNSDate表示
+    func LocalDate(date: NSDate,lastDays: Int) -> String {
+        let calendar = NSCalendar.currentCalendar()
+        let comps = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Second], fromDate:date)
+        let year = comps.year
+        let month = comps.month
+        let day = comps.day
+        var last = "expiring"
+        if lastDays >= 0 {
+            last = "(\(lastDays)days)"
+        }
+        return String(format: "%04d/%02d/%02d %@", year,month,day,last)
+    }
 
 
     override var representedObject: AnyObject? {
