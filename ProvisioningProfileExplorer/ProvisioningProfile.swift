@@ -7,6 +7,10 @@
 //
 
 import Cocoa
+//import ServiceManagement
+//import SecurityInterface
+//import SecurityFoundation
+
 
 class ProvisioningProfile: NSObject {
 
@@ -18,11 +22,14 @@ class ProvisioningProfile: NSObject {
     var teamIdentifier = [String]()
     var appIDName:String = ""
     var provisionedDevices = [String]()
+    var timeToLive :NSNumber = 0
     var expirationDate: NSDate = NSDate(timeIntervalSinceReferenceDate: 0)
     var creationDate: NSDate = NSDate(timeIntervalSinceReferenceDate: 0)
     var lastDays = 0
     var entitlements:String = ""
     let calendar = NSCalendar.currentCalendar()
+    var certificates:[Certificate]=[]
+
 
     init(path:String){
         super.init()
@@ -44,107 +51,142 @@ class ProvisioningProfile: NSObject {
             return
         }
 
-//        // DEBUG
-//        for key in plist.allKeys {
-//            print("key:\(key) value:\(plist.objectForKey(key))")
-//        }
         name = plist.objectForKey("Name") as! String
         creationDate = plist.objectForKey("CreationDate") as! NSDate
         expirationDate = plist.objectForKey("ExpirationDate") as! NSDate
         // 期限までの残り日数
         lastDays = calendar.components([.Day], fromDate:expirationDate, toDate: NSDate(),options: NSCalendarOptions.init(rawValue: 0)).day
         lastDays *= -1
-
         uuid = plist.objectForKey("UUID") as! String
         teamName = plist.objectForKey("TeamName") as! String
         teamIdentifier = (plist.objectForKey("TeamIdentifier") as? [String])!
+        appIDName = plist.objectForKey("AppIDName") as! String
+        timeToLive = plist.objectForKey("TimeToLive") as! NSNumber
         if let devices = plist.objectForKey("ProvisionedDevices") as? [String] {
             provisionedDevices = devices.sort{ $0 < $1 }
         }
-        appIDName = plist.objectForKey("AppIDName") as! String
-
-        var dictionary = plist.objectForKey("Entitlements") as! NSDictionary
-        var dictionaryFormatted:NSMutableString = NSMutableString()
-        dictionaryFormatted.appendFormat("<pre>")
-        displayKeyAndValue(0, key: "", value: dictionary, output: dictionaryFormatted)
-        dictionaryFormatted.appendFormat("</pre>")
-
-        entitlements = dictionaryFormatted as String
-
-
-var x=0
-
-//        value = [propertyList objectForKey:@"Entitlements"];
-//        if ([value isKindOfClass:[NSDictionary class]]) {
-//            NSDictionary *dictionary = (NSDictionary *)value;
-//            NSMutableString *dictionaryFormatted = [NSMutableString string];
-//            displayKeyAndValue(0, nil, dictionary, dictionaryFormatted);
-//            synthesizedValue = [NSString stringWithFormat:@"<pre>%@</pre>", dictionaryFormatted];
-//
-//            [synthesizedInfo setObject:synthesizedValue forKey:@"EntitlementsFormatted"];
-//        } else {
-//            [synthesizedInfo setObject:@"No Entitlements" forKey:@"EntitlementsFormatted"];
-//        }
+        // Certificates
+        let developerCertificates = plist.objectForKey("DeveloperCertificates") as! NSArray
+        certificates = decodeCertificate(developerCertificates)
+        certificates.sortInPlace { (a,b) in return a.summary < b.summary }
 
 
 
-
+        // Entitlements
+        let dictionary = plist.objectForKey("Entitlements") as! NSDictionary
+        if dictionary.count > 0 {
+            let buffer = NSMutableString()
+            buffer.appendFormat("<pre>")
+            displayEntitlements(0, key: "", value: dictionary, buffer: buffer)
+            buffer.appendFormat("</pre>")
+            entitlements = buffer as String
+        }else{
+            entitlements = "No Entitlements"
+        }
     }
 
-    func displayKeyAndValue(level:Int,  key:String, value:AnyObject, output:NSMutableString) {
-        var indent = level * 4;
+    func decodeCertificate(array:NSArray) -> [Certificate] {
+
+        var certificates:[Certificate]=[];
+        let calendar = NSCalendar.currentCalendar()
+
+        for data in array {
+            var date:NSDate? = nil
+            var summary = ""
+            var lastDays = 0
+            let certificateRef:SecCertificate? =  SecCertificateCreateWithData(nil,data as! CFData)
+            if (certificateRef != nil) {
+                summary = SecCertificateCopySubjectSummary(certificateRef!) as! String
+                let valuesDict = SecCertificateCopyValues(certificateRef!, [kSecOIDInvalidityDate],nil)!
+
+                let invalidityDateDictionaryRef = CFDictionaryGetValue(valuesDict, unsafeAddressOf(kSecOIDInvalidityDate));
+                if invalidityDateDictionaryRef != nil {
+                    let credential = unsafeBitCast(invalidityDateDictionaryRef, CFDictionaryRef.self)
+
+//                    CFShow(credential);
+//                    <CFBasicHash 0x600000263d80 [0x7fff79f4d440]>{type = immutable dict, count = 4,
+//                        entries =>
+//                        1 : <CFString 0x7fff7a49fdd0 [0x7fff79f4d440]>{contents = "label"} = <CFString 0x7fff7a4a0050 [0x7fff79f4d440]>{contents = "Expires"}
+//                        2 : <CFString 0x7fff7a49fe10 [0x7fff79f4d440]>{contents = "value"} = 2016-04-26 03:15:28 +0000
+//                        3 : <CFString 0x7fff7a49fdf0 [0x7fff79f4d440]>{contents = "localized label"} = <CFString 0x7fff7a4a0050 [0x7fff79f4d440]>{contents = "Expires"}
+//                        4 : <CFString 0x7fff7a49fdb0 [0x7fff79f4d440]>{contents = "type"} = <CFString 0x7fff7a49ff30 [0x7fff79f4d440]>{contents = "date"}
+//                    }
+
+                    var key:CFString = "label"
+                    var value = CFDictionaryGetValue(credential,unsafeAddressOf(key))
+                    var label = unsafeBitCast(value, NSString.self)
+                    if label == "Expires" {
+                        key = "value"
+                        value = CFDictionaryGetValue(credential,unsafeAddressOf(key))
+                        date = unsafeBitCast(value, NSDate.self)
+
+                        // 期限までの残り日数
+                        lastDays = calendar.components([.Day], fromDate:date!, toDate: NSDate(),options: NSCalendarOptions.init(rawValue: 0)).day
+                        lastDays *= -1
+
+
+                    }
+                }
+                certificates.append(Certificate(summary:summary,expires: date,lastDays: lastDays))
+            }
+        }
+        return certificates
+    }
+
+
+
+    func displayEntitlements(tab:Int,  key:String, value:AnyObject, buffer:NSMutableString) {
+
+
 
         if value is NSDictionary {
             if key.isEmpty {
-                output.appendFormat("%@{\n", tab(indent))
+                buffer.appendFormat("%@{\n", space(tab))
             } else {
-                output.appendFormat("%@%@ = {\n", tab(indent), key)
+                buffer.appendFormat("%@%@ = {\n", space(tab), key)
             }
 
-            var dictionary:NSDictionary  = value as! NSDictionary
-            //keys:NSArray = dictionary.allKeys.sortedArrayUsingSelector:@selector(compare:)
-            var keys:[String] = dictionary.allKeys as! [String]
+            let dictionary = value as! NSDictionary
+            var keys = dictionary.allKeys as! [String]
             keys.sortInPlace()
 
             for var key in keys {
-                displayKeyAndValue(level+1, key: key, value: dictionary.valueForKey(key)!, output: output)
-                //displayKeyAndValue(level + 1, key: key as! String, value: dictionary.valueForKey(key as! String) as! (String), output: output)
+                displayEntitlements(tab + 1, key: key, value: dictionary.valueForKey(key)!, buffer: buffer)
             }
-            output.appendFormat("%@}\n", tab(indent));
+            buffer.appendFormat("%@}\n", space(tab));
+
         } else if value is NSArray {
-            output.appendFormat("%@%@ = (\n", tab(indent), key)
-            var array:NSArray = value as! NSArray
+            let array = value as! NSArray
+            buffer.appendFormat("%@%@ = (\n", space(tab), key)
             for var value in array {
-                displayKeyAndValue(level + 1, key: "", value: value as! NSObject, output: output)
+                displayEntitlements(tab + 1, key: "", value: value as! NSObject, buffer: buffer)
             }
-            output.appendFormat("%@)\n", tab(indent))
+            buffer.appendFormat("%@)\n", space(tab))
+
         } else if value is NSData {
-            let data:NSData = value as! NSData
+            let data = value as! NSData
             if key.isEmpty {
-                output.appendFormat("%@%d bytes of data\n", tab(indent), data.length);
+                buffer.appendFormat("%@%d bytes of data\n", space(tab), data.length);
             } else {
-                output.appendFormat("%@%@ = %d bytes of data\n", tab(indent), key, data.length)
+                buffer.appendFormat("%@%@ = %d bytes of data\n", space(tab), key, data.length)
             }
         } else {
             if key.isEmpty {
-                output.appendFormat("%@%@\n", tab(indent), value.description)
+                buffer.appendFormat("%@%@\n", space(tab), value.description)
             } else {
-                output.appendFormat("%@%@ = %@\n", tab(indent), key, value.description)
+                buffer.appendFormat("%@%@ = %@\n", space(tab), key, value.description)
             }
         }
     }
 
-    func tab(num:Int) -> String {
+    func space(num:Int) -> String {
         var tmp = ""
         for _ in 0..<num {
-            tmp = tmp + " "
+            tmp = tmp + "    "
         }
         return tmp
     }
 
-
-
-    // ローカルタイムでのNSDate表示
     func LocalDate(date: NSDate) -> String {
         let calendar = NSCalendar.currentCalendar()
         let comps = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Second], fromDate:date)
@@ -157,8 +199,6 @@ var x=0
         return String(format: "%04d/%02d/%02d %02d:%02d:%02d", year,month,day,hour,minute,second)
     }
 
-
-    // 暗号データの復号
     func decode(encryptedData:NSData) -> NSData? {
         var decoder: CMSDecoder?;
         var decodedData: CFData?;
@@ -176,8 +216,6 @@ var x=0
         if let filePath = NSBundle.mainBundle().pathForResource("style", ofType: "css"){
             css  = try! String(contentsOfFile: filePath)
         }
-
-
         var html = "<html>"
         html.appendContentsOf("<style>" + css + "</style>")
 
@@ -189,6 +227,7 @@ var x=0
 
         html.appendContentsOf(String(format: "<div class=\"name\">%@</div>",name))
         html = appendHTML(html,key: "Profile UUID",value: uuid)
+        html = appendHTML(html,key: "Time To Live",value: "\(timeToLive)")
         html = appendHTML(html,key: "Profile Team",value: teamName)
         if teamIdentifier.count>0 {
             html.appendContentsOf("(")
@@ -205,6 +244,32 @@ var x=0
             html.appendContentsOf(" ( " + lastDays.description + " days )")
         }
         html = appendHTML(html,key: "App ID Name",value: appIDName)
+
+        // DEVELOPER CRTIFICATES
+        var n = 1
+        if certificates.count > 0 {
+            html.appendContentsOf("<div class=\"title\">DEVELOPER CRTIFICATES</div>")
+            html.appendContentsOf("<table>")
+            for var certificate in certificates {
+                html.appendContentsOf("<tr>")
+                html.appendContentsOf("<td>\(n)</td>")
+                html.appendContentsOf("<td>\(certificate.summary)</td>")
+                if certificate.expires == nil {
+                    html.appendContentsOf("<td>No invalidity date in certificate</td>")
+                }else{
+
+                    if certificate.lastDays < 0 {
+                        html.appendContentsOf("<td>expiring</td>")
+                    }else{
+                        html.appendContentsOf("<td>Expires in " + certificate.lastDays.description + " days </td>")
+                    }
+                }
+                html.appendContentsOf("</tr>")
+                n += 1
+            }
+            html.appendContentsOf("</table>")
+        }
+
 
         // ENTITLEMENTS
         html.appendContentsOf("<div class=\"title\">ENTITLEMENTS</div>")
@@ -236,12 +301,8 @@ var x=0
             html.appendContentsOf("<div class=\"title\">DEVICES (Distribution Profile)</div>")
             html.appendContentsOf("<br>No Devices")
         }
-
-
-
         html.appendContentsOf("</body>")
         html.appendContentsOf("</html>")
-
         return html
     }
 

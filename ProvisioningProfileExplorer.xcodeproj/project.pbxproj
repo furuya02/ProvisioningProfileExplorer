@@ -13,10 +13,12 @@
 		D7BD95421CB9F04E00FFA177 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7BD95411CB9F04E00FFA177 /* Assets.xcassets */; };
 		D7BD95451CB9F04E00FFA177 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7BD95431CB9F04E00FFA177 /* Main.storyboard */; };
 		D7BD95681CB9F6D100FFA177 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7BD95671CB9F6D100FFA177 /* WebKit.framework */; };
+		D7C567751CC1992F001C74DD /* Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C567741CC1992F001C74DD /* Certificate.swift */; };
 		D7CE24DC1CBA2C980017CE12 /* ProvisioningProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CE24DB1CBA2C980017CE12 /* ProvisioningProfile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D758B9251CBDC82B00180422 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D77D43711CBC75C400A579B7 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		D7BD953A1CB9F04E00FFA177 /* ProvisioningProfileExplorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProvisioningProfileExplorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7BD953D1CB9F04E00FFA177 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -25,6 +27,7 @@
 		D7BD95441CB9F04E00FFA177 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D7BD95461CB9F04E00FFA177 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7BD95671CB9F6D100FFA177 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		D7C567741CC1992F001C74DD /* Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Certificate.swift; sourceTree = "<group>"; };
 		D7CE24DB1CBA2C980017CE12 /* ProvisioningProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProvisioningProfile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -43,6 +46,7 @@
 		D7BD95311CB9F04E00FFA177 = {
 			isa = PBXGroup;
 			children = (
+				D758B9251CBDC82B00180422 /* Security.framework */,
 				D7BD95671CB9F6D100FFA177 /* WebKit.framework */,
 				D7BD953C1CB9F04E00FFA177 /* ProvisioningProfileExplorer */,
 				D7BD953B1CB9F04E00FFA177 /* Products */,
@@ -75,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				D7CE24DB1CBA2C980017CE12 /* ProvisioningProfile.swift */,
+				D7C567741CC1992F001C74DD /* Certificate.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 				D7CE24DC1CBA2C980017CE12 /* ProvisioningProfile.swift in Sources */,
 				D7BD95401CB9F04E00FFA177 /* ViewController.swift in Sources */,
 				D7BD953E1CB9F04E00FFA177 /* AppDelegate.swift in Sources */,
+				D7C567751CC1992F001C74DD /* Certificate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

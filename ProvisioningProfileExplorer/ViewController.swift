@@ -9,6 +9,9 @@
 import Cocoa
 import WebKit
 
+import SecurityFoundation
+import SecurityInterface
+
 class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate{
 
     @IBOutlet weak var tableView: NSTableView!
@@ -21,7 +24,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         super.viewDidLoad()
 
         let manager = NSFileManager.defaultManager()
-        let path =  NSHomeDirectory() + "/Library/MobileDevice/Provisioning Profiles"
+
+        let path =  "/Users/hirauchishinichi/Downloads/test"
+        //let path =  NSHomeDirectory() + "/Library/MobileDevice/Provisioning Profiles"
         if let files = try? manager.contentsOfDirectoryAtPath( path ) {
             for file in files {
                 //profiles.add(ProvisioningProfile(path: path + "/" + file))
