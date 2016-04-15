@@ -14,8 +14,6 @@ import Cocoa
 
 class ProvisioningProfile: NSObject {
 
-    private var _path = ""
-
     var name: String = ""
     var uuid: String = ""
     var teamName: String = ""
@@ -29,19 +27,21 @@ class ProvisioningProfile: NSObject {
     var entitlements:String = ""
     let calendar = NSCalendar.currentCalendar()
     var certificates:[Certificate]=[]
+    var fileName = ""
+    var fileModificationDate:NSDate = NSDate(timeIntervalSinceReferenceDate: 0)
+    var fileSize:UInt64 = 0
 
 
     init(path:String){
         super.init()
 
-        _path = path
-        Interpretation()
+        Interpretation(path)
     }
 
 
-    func Interpretation(){
+    func Interpretation(path:String){
 
-        guard let encryptedData = NSData(contentsOfFile: _path) else {
+        guard let encryptedData = NSData(contentsOfFile: path) else {
             return
         }
         guard let plistData = decode(encryptedData) else{
@@ -50,6 +50,14 @@ class ProvisioningProfile: NSObject {
         guard let plist = try? NSPropertyListSerialization.propertyListWithData(plistData, options: NSPropertyListMutabilityOptions.MutableContainersAndLeaves, format: nil) as! NSDictionary else {
             return
         }
+
+        fileName = path
+
+        if let attr: NSDictionary = try! NSFileManager.defaultManager().attributesOfItemAtPath(path){
+            fileModificationDate = attr.fileModificationDate()!
+            fileSize = attr.fileSize()
+        }
+
 
         name = plist.objectForKey("Name") as! String
         creationDate = plist.objectForKey("CreationDate") as! NSDate
@@ -301,6 +309,14 @@ class ProvisioningProfile: NSObject {
             html.appendContentsOf("<div class=\"title\">DEVICES (Distribution Profile)</div>")
             html.appendContentsOf("<br>No Devices")
         }
+
+        // FILE INFOMATION
+        html.appendContentsOf("<div class=\"title\">FILE INFOMATION</div>")
+        html.appendContentsOf("<br>Path: \(fileName)")
+        html.appendContentsOf("<br>size: \(fileSize/1000)Kbyte")
+        html.appendContentsOf("<br>ModificationDate: \(LocalDate(fileModificationDate))")
+
+
         html.appendContentsOf("</body>")
         html.appendContentsOf("</html>")
         return html

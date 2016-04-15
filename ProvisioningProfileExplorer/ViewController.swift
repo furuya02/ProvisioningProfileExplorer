@@ -25,8 +25,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
 
         let manager = NSFileManager.defaultManager()
 
-        let path =  "/Users/hirauchishinichi/Downloads/test"
-        //let path =  NSHomeDirectory() + "/Library/MobileDevice/Provisioning Profiles"
+        let path =  NSHomeDirectory() + "/Library/MobileDevice/Provisioning Profiles"
         if let files = try? manager.contentsOfDirectoryAtPath( path ) {
             for file in files {
                 //profiles.add(ProvisioningProfile(path: path + "/" + file))

@@ -18,7 +18,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D758B9251CBDC82B00180422 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D77D43711CBC75C400A579B7 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		D7BD953A1CB9F04E00FFA177 /* ProvisioningProfileExplorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProvisioningProfileExplorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7BD953D1CB9F04E00FFA177 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -46,7 +45,6 @@
 		D7BD95311CB9F04E00FFA177 = {
 			isa = PBXGroup;
 			children = (
-				D758B9251CBDC82B00180422 /* Security.framework */,
 				D7BD95671CB9F6D100FFA177 /* WebKit.framework */,
 				D7BD953C1CB9F04E00FFA177 /* ProvisioningProfileExplorer */,
 				D7BD953B1CB9F04E00FFA177 /* Products */,
