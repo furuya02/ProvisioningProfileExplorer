@@ -16,9 +16,10 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
 
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var webView: WebView!
+    @IBOutlet weak var statusLabel: NSTextField!
 
-
-    var profiles :[ProvisioningProfile] = []
+    var _profiles :[ProvisioningProfile] = []
+    var viewProfiles :[ProvisioningProfile] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,41 +30,50 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         if let files = try? manager.contentsOfDirectoryAtPath( path ) {
             for file in files {
                 //profiles.add(ProvisioningProfile(path: path + "/" + file))
-                profiles.append(ProvisioningProfile(path: path + "/" + file))
+                _profiles.append(ProvisioningProfile(path: path + "/" + file))
             }
         }
+        Search("")
+
         // 一番上を選択する
         let indexSet = NSIndexSet(index: 0)
         tableView.selectRowIndexes(indexSet, byExtendingSelection: true)
-        webView.mainFrame.loadHTMLString(profiles[0].generateHTML(),baseURL: nil)
+        webView.mainFrame.loadHTMLString(viewProfiles[0].generateHTML(),baseURL: nil)
+
+
+
     }
 
 
     // tableView
     func numberOfRowsInTableView(tableView: NSTableView) -> Int {
-        return profiles.count
+        return viewProfiles.count
     }
 
     func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject? {
 
         switch tableColumn!.identifier {
         case "teamName":
-            return profiles[row].teamName
+            return viewProfiles[row].teamName
         case "name":
-            return profiles[row].name
+            return viewProfiles[row].name
         case "expirationDate":
-            return LocalDate(profiles[row].expirationDate,lastDays: profiles[row].lastDays)
+            return LocalDate(viewProfiles[row].expirationDate,lastDays: viewProfiles[row].lastDays)
         case "createDate":
-            return profiles[row].creationDate
+            return viewProfiles[row].creationDate
         case "uuid":
-            return profiles[row].uuid
+            return viewProfiles[row].uuid
         default:
             return "ERROR"
         }
     }
 
     func tableViewSelectionDidChange(notification: NSNotification) {
-        webView.mainFrame.loadHTMLString(profiles[tableView.selectedRow].generateHTML(),baseURL: nil)
+        if 0 <= tableView.selectedRow && tableView.selectedRow < viewProfiles.count {
+            webView.mainFrame.loadHTMLString(viewProfiles[tableView.selectedRow].generateHTML(),baseURL: nil)
+        } else {
+            webView.mainFrame.loadHTMLString("",baseURL: nil)
+        }
     }
 
     func tableView(tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
@@ -74,39 +84,65 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
             case "name":
                 if sortDescriptor.ascending {
 
-                    profiles.sortInPlace { (a,b) in return a.name < b.name }
+                    viewProfiles.sortInPlace { (a,b) in return a.name < b.name }
                 } else {
-                    profiles.sortInPlace { (a,b) in return a.name > b.name }
+                    viewProfiles.sortInPlace { (a,b) in return a.name > b.name }
                 }
             case "teamName":
                 if sortDescriptor.ascending {
-                    profiles.sortInPlace { (a,b) in return a.teamName < b.teamName }
+                    viewProfiles.sortInPlace { (a,b) in return a.teamName < b.teamName }
                 } else {
-                    profiles.sortInPlace { (a,b) in return a.teamName > b.teamName }
+                    viewProfiles.sortInPlace { (a,b) in return a.teamName > b.teamName }
                 }
             case "uuid":
                 if sortDescriptor.ascending {
-                    profiles.sortInPlace { (a,b) in return a.uuid < b.uuid }
+                    viewProfiles.sortInPlace { (a,b) in return a.uuid < b.uuid }
                 } else {
-                    profiles.sortInPlace { (a,b) in return a.uuid > b.uuid }
+                    viewProfiles.sortInPlace { (a,b) in return a.uuid > b.uuid }
                 }
             case "expirationDate":
                 if sortDescriptor.ascending {
-                    profiles.sortInPlace { (a,b) in return a.expirationDate.timeIntervalSince1970 < b.expirationDate.timeIntervalSince1970 }
+                    viewProfiles.sortInPlace { (a,b) in return a.expirationDate.timeIntervalSince1970 < b.expirationDate.timeIntervalSince1970 }
                 } else {
-                    profiles.sortInPlace { (a,b) in return a.expirationDate.timeIntervalSince1970 > b.expirationDate.timeIntervalSince1970 }
+                    viewProfiles.sortInPlace { (a,b) in return a.expirationDate.timeIntervalSince1970 > b.expirationDate.timeIntervalSince1970 }
                 }
             default:
                 if sortDescriptor.ascending {
-                    profiles.sortInPlace { (a,b) in return a.uuid < b.uuid }
+                    viewProfiles.sortInPlace { (a,b) in return a.uuid < b.uuid }
                 } else {
-                    profiles.sortInPlace { (a,b) in return a.uuid > b.uuid }
+                    viewProfiles.sortInPlace { (a,b) in return a.uuid > b.uuid }
                 }
             }
             break; // 一回でいい
         }
         tableView.reloadData()
     }
+
+    //search
+    func Search(searchText:String){
+        print("Search(\(searchText))")
+        if searchText == "" {
+            viewProfiles = _profiles
+        }else{
+            viewProfiles = []
+            for profile in _profiles {
+                if profile.appIDName.lowercaseString.containsString(searchText.lowercaseString) {
+                    viewProfiles.append(profile)
+                }else if profile.name.lowercaseString.containsString(searchText.lowercaseString) {
+                    viewProfiles.append(profile)
+                }else if profile.uuid.lowercaseString.containsString(searchText.lowercaseString) {
+                    viewProfiles.append(profile)
+                }
+            }
+        }
+        statusLabel.stringValue = "\(viewProfiles.count) provisioning Profiles"
+        tableView.reloadData()
+    }
+
+    @IBAction func changeSearchField(sender: NSSearchFieldCell) {
+        Search(sender.stringValue)
+    }
+
 
     // ローカルタイムでのNSDate表示
     func LocalDate(date: NSDate,lastDays: Int) -> String {

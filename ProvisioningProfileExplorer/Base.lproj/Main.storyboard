@@ -688,7 +688,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" headerView="IC7-ue-RJW" id="Kdy-xv-7sm">
-                                                            <rect key="frame" x="0.0" y="0.0" width="982" height="300"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="982" height="19"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <size key="intercellSpacing" width="3" height="2"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -804,15 +804,44 @@
                                     <real value="250"/>
                                 </holdingPriorities>
                             </splitView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yQ2-gv-GHZ">
+                                <rect key="frame" x="18" y="5" width="874" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="pke-kt-n7l">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <searchField wantsLayer="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8FX-WJ-L1w">
+                                <rect key="frame" x="562" y="705" width="336" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="336" id="7R5-X3-n0g"/>
+                                </constraints>
+                                <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="hZA-Nd-NLL">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <connections>
+                                        <action selector="changeSearchField:" target="XfG-lQ-9wD" id="FFG-K7-Ggg"/>
+                                    </connections>
+                                </searchFieldCell>
+                            </searchField>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="yQ2-gv-GHZ" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="A0Y-ob-3Yd"/>
+                            <constraint firstItem="ZEJ-Ce-KgT" firstAttribute="top" secondItem="8FX-WJ-L1w" secondAttribute="bottom" constant="8" id="Kue-cY-aNN"/>
                             <constraint firstAttribute="trailing" secondItem="ZEJ-Ce-KgT" secondAttribute="trailing" id="NGT-qB-xEI"/>
+                            <constraint firstAttribute="trailing" secondItem="8FX-WJ-L1w" secondAttribute="trailing" constant="12" id="U7l-bA-Dxy"/>
+                            <constraint firstAttribute="trailing" secondItem="yQ2-gv-GHZ" secondAttribute="trailing" constant="20" id="bfs-07-KS5"/>
+                            <constraint firstItem="8FX-WJ-L1w" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="5" id="cui-T2-aCZ"/>
+                            <constraint firstAttribute="bottom" secondItem="yQ2-gv-GHZ" secondAttribute="bottom" constant="5" id="efC-nv-4pK"/>
                             <constraint firstItem="ZEJ-Ce-KgT" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="hQM-te-0rn"/>
                             <constraint firstItem="ZEJ-Ce-KgT" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="35" id="rq7-As-SkD"/>
                             <constraint firstAttribute="bottom" secondItem="ZEJ-Ce-KgT" secondAttribute="bottom" constant="25" id="ted-45-MFS"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="statusLabel" destination="yQ2-gv-GHZ" id="2Wm-1H-EKW"/>
                         <outlet property="tableView" destination="Kdy-xv-7sm" id="8ie-OR-LQe"/>
                         <outlet property="webView" destination="335-dD-QXu" id="0Uc-Sm-39J"/>
                     </connections>
